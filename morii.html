@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MORII 木里 | 讓生活，回到舒服的樣子。</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        morii: {
+                            bg: '#F2EADF',      /* 奶油米白 */
+                            primary: '#C5A780', /* 原木棕 */
+                            secondary: '#817565',/* 灰褐色 */
+                            dark: '#34372F',    /* 森林炭灰 */
+                            light: '#FAF6F0'    /* 淺色微調 */
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'Noto Sans TC', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background-color: #F2EADF;
+            color: #34372F;
+            font-family: 'Inter', 'Noto Sans TC', sans-serif;
+            overflow-x: hidden;
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #F2EADF;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #C5A780;
+            border-radius: 4px;
+        }
+
+        /* --- 1. Typography & Page Load Animations (Slide 21 規格) --- */
+        @keyframes heroMaskReveal {
+            0% {
+                clip-path: inset(0 100% 0 0);
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            100% {
+                clip-path: inset(0 0% 0 0);
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes textRevealUp {
+            0% {
+                opacity: 0;
+                transform: translateY(24px) rotate(1deg);
+                filter: blur(4px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) rotate(0deg);
+                filter: blur(0px);
+            }
+        }
+
+        /* 類別套用 */
+        .animate-hero-title {
+            animation: heroMaskReveal 1.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .animate-hero-subtitle {
+            opacity: 0;
+            animation: textRevealUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.5s forwards;
+        }
+
+        .animate-hero-badge {
+            opacity: 0;
+            animation: textRevealUp 1s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards;
+        }
+
+        .animate-hero-cta {
+            opacity: 0;
+            animation: textRevealUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.8s forwards;
+        }
+
+        /* --- 2. Scroll & Section Transition 滾動淡入位移與卡片互動 --- */
+        .scroll-reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1), transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .scroll-reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Image Hover & Transition (圖片懸停縮放與光影過渡) */
+        .img-hover-zoom {
+            transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), filter 0.8s ease;
+        }
+        .group:hover .img-hover-zoom {
+            transform: scale(1.06);
+            filter: brightness(1.05);
+        }
+
+        /* Button Hover & Click Ripple Feedback */
+        .btn-interactive {
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-interactive:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px -5px rgba(197, 167, 128, 0.4);
+        }
+        .btn-interactive:active {
+            transform: translateY(1px);
+        }
+
+        /* --- 3. Product x Typography Choreography 產品卡片與文字互動編排 --- */
+        .choreography-card {
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .choreography-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 35px -10px rgba(197, 167, 128, 0.25);
+        }
+        
+        /* Staggered text line animations inside product card */
+        .choreography-card .card-title {
+            transition: transform 0.4s ease, color 0.4s ease;
+        }
+        .choreography-card:hover .card-title {
+            transform: translateX(4px);
+            color: #C5A780;
+        }
+
+        .choreography-card .spec-line-1 {
+            transition: transform 0.4s ease 0.05s, opacity 0.4s ease 0.05s;
+        }
+        .choreography-card .spec-line-2 {
+            transition: transform 0.4s ease 0.1s, opacity 0.4s ease 0.1s;
+        }
+        .choreography-card .spec-line-3 {
+            transition: transform 0.4s ease 0.15s, opacity 0.4s ease 0.15s;
+        }
+        
+        .choreography-card:hover .spec-line-1,
+        .choreography-card:hover .spec-line-2,
+        .choreography-card:hover .spec-line-3 {
+            transform: translateX(2px);
+        }
+
+        /* --- 4. Parallax Effect Enhancements (視差滾動效果) --- */
+        .parallax-bg {
+            will-change: transform;
+            transition: transform 0.1s linear;
+        }
+
+        /* 尊重使用者減少動態偏好 */
+        @media (prefers-reduced-motion: reduce) {
+            .animate-hero-title,
+            .animate-hero-subtitle,
+            .animate-hero-badge,
+            .animate-hero-cta,
+            .scroll-reveal,
+            .choreography-card,
+            .parallax-bg {
+                animation: none !important;
+                opacity: 1 !important;
+                transform: none !important;
+                filter: none !important;
+                transition: none !important;
+            }
+        }
+    </style>
+</head>
+<body class="bg-[#F2EADF] text-[#34372F] antialiased selection:bg-[#C5A780] selection:text-white">
+
+    <!-- Header 導覽列 -->
+    <header id="header" class="fixed top-0 left-0 w-full z-50 bg-[#F2EADF]/80 backdrop-blur-md border-b border-[#C5A780]/20 transition-all duration-500">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            <!-- 左側 Logo -->
+            <a href="#" class="flex flex-col items-start group transition-transform duration-300 hover:scale-105">
+                <span class="text-2xl font-light tracking-[0.25em] text-[#34372F] group-hover:text-[#C5A780] transition-colors">MORII</span>
+                <span class="text-[10px] tracking-[0.3em] text-[#817565] -mt-1 font-medium">木 里</span>
+            </a>
+
+            <!-- 右側導覽選單 (桌面版) -->
+            <nav class="hidden md:flex items-center space-x-10">
+                <a href="#philosophy" class="text-sm tracking-widest text-[#34372F] hover:text-[#C5A780] transition-colors duration-300 py-2 relative after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-[1px] after:bg-[#C5A780] hover:after:w-full after:transition-all after:duration-300">品牌理念</a>
+                <a href="#collections" class="text-sm tracking-widest text-[#34372F] hover:text-[#C5A780] transition-colors duration-300 py-2 relative after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-[1px] after:bg-[#C5A780] hover:after:w-full after:transition-all after:duration-300">家具系列</a>
+                <a href="#featured" class="text-sm tracking-widest text-[#34372F] hover:text-[#C5A780] transition-colors duration-300 py-2 relative after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-[1px] after:bg-[#C5A780] hover:after:w-full after:transition-all after:duration-300">主打產品</a>
+                <a href="#inspiration" class="text-sm tracking-widest text-[#34372F] hover:text-[#C5A780] transition-colors duration-300 py-2 relative after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-[1px] after:bg-[#C5A780] hover:after:w-full after:transition-all after:duration-300">居家靈感</a>
+                <a href="#contact" class="text-sm tracking-widest text-[#34372F] hover:text-[#C5A780] transition-colors duration-300 py-2 relative after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-[1px] after:bg-[#C5A780] hover:after:w-full after:transition-all after:duration-300">聯絡我們</a>
+            </nav>
+
+            <!-- 手機版漢堡選單按鈕 -->
+            <button id="menu-btn" class="md:hidden text-[#34372F] focus:outline-none p-2 transition-transform duration-300 active:scale-95" aria-label="切換選單">
+                <i class="fa-solid fa-bars text-xl"></i>
+            </button>
+        </div>
+
+        <!-- 手機版下拉選單 -->
+        <div id="mobile-menu" class="hidden md:hidden bg-[#FAF6F0] border-b border-[#C5A780]/20 px-6 py-6 space-y-4 shadow-xl transition-all duration-300">
+            <a href="#philosophy" class="block text-base tracking-widest text-[#34372F] hover:text-[#C5A780] py-2 border-b border-[#C5A780]/10 transition-colors">品牌理念</a>
+            <a href="#collections" class="block text-base tracking-widest text-[#34372F] hover:text-[#C5A780] py-2 border-b border-[#C5A780]/10 transition-colors">家具系列</a>
+            <a href="#featured" class="block text-base tracking-widest text-[#34372F] hover:text-[#C5A780] py-2 border-b border-[#C5A780]/10 transition-colors">主打產品</a>
+            <a href="#inspiration" class="block text-base tracking-widest text-[#34372F] hover:text-[#C5A780] py-2 border-b border-[#C5A780]/10 transition-colors">居家靈感</a>
+            <a href="#contact" class="block text-base tracking-widest text-[#34372F] hover:text-[#C5A780] py-2 transition-colors">聯絡我們</a>
+        </div>
+    </header>
+
+    <!-- Hero 首屏主視覺 -->
+    <section class="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden">
+        <div class="absolute inset-0 z-0 overflow-hidden">
+            <img src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=1920&q=80" 
+                 alt="日系自然木質客廳" 
+                 class="parallax-bg w-full h-[120%] -top-[10%] absolute object-cover brightness-95 scale-105"
+                 id="hero-bg"
+                 onerror="this.src='https://placehold.co/1920x1080/E5DFD3/34372F?text=MORII+Living+Space';">
+            <div class="absolute inset-0 bg-[#34372F]/25 backdrop-blur-[1px]"></div>
+        </div>
+        
+        <div class="relative z-10 max-w-5xl mx-auto px-6 text-center py-24">
+            <span class="animate-hero-badge inline-block text-xs md:text-sm tracking-[0.3em] text-[#FAF6F0] uppercase mb-4 px-4 py-1.5 rounded-full bg-[#817565]/60 backdrop-blur-sm shadow-sm">
+                Natural Wood Aesthetic
+            </span>
+            <h1 class="animate-hero-title text-4xl md:text-6xl lg:text-7xl font-light text-white tracking-[0.1em] mb-6 leading-tight drop-shadow-md">
+                讓生活，回到舒服的樣子。
+            </h1>
+            <p class="animate-hero-subtitle text-base md:text-xl text-[#FAF6F0] max-w-2xl mx-auto font-light tracking-wide mb-10 drop-shadow">
+                以自然木質與簡約設計，打造屬於你的舒適日常。
+            </p>
+            <div class="animate-hero-cta flex flex-col sm:flex-row items-center justify-center gap-4">
+                <a href="#collections" class="btn-interactive w-full sm:w-auto px-8 py-4 bg-[#C5A780] hover:bg-[#b0936e] text-white text-sm tracking-[0.2em] rounded text-center shadow-lg flex items-center justify-center gap-2">
+                    探索家具系列 <i class="fa-solid fa-arrow-right text-xs"></i>
+                </a>
+                <a href="#philosophy" class="btn-interactive w-full sm:w-auto px-8 py-4 bg-white/80 hover:bg-white text-[#34372F] text-sm tracking-[0.2em] rounded backdrop-blur-sm text-center">
+                    了解品牌故事
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 品牌理念區 -->
+    <section id="philosophy" class="py-28 md:py-36 px-6 max-w-7xl mx-auto">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            <!-- 圖片 -->
+            <div class="scroll-reveal relative overflow-hidden rounded-lg shadow-xl aspect-[4/3] group">
+                <img src="https://images.unsplash.com/photo-1538688525198-9b88f6f53126?auto=format&fit=crop&w=1000&q=80" 
+                     alt="自然光照射的木質家具" 
+                     class="img-hover-zoom w-full h-full object-cover"
+                     onerror="this.src='https://placehold.co/800x600/E5DFD3/34372F?text=Wood+Craftsmanship';">
+                <div class="absolute inset-0 border border-[#C5A780]/30 m-4 pointer-events-none rounded"></div>
+            </div>
+            
+            <!-- 文字內容 -->
+            <div class="scroll-reveal lg:pl-8" style="transition-delay: 200ms;">
+                <span class="text-xs uppercase tracking-[0.3em] text-[#817565] block mb-3 font-medium">Philosophy</span>
+                <h2 class="text-3xl md:text-4xl font-light text-[#34372F] tracking-wide mb-6 leading-relaxed">
+                    讓家具，融入生活。
+                </h2>
+                <div class="w-12 h-[1px] bg-[#C5A780] mb-8"></div>
+                <p class="text-[#817565] leading-relaxed mb-6 font-light tracking-wide text-base md:text-lg">
+                    在 MORII 木里，我們相信家是心靈最柔軟的避風港。我們選用溫潤的北美白橡木與北美胡桃木，保留天然木紋與呼吸感，透過極簡流暢的線條設計，捨棄繁複的裝飾。
+                </p>
+                <p class="text-[#817565] leading-relaxed font-light tracking-wide text-base md:text-lg mb-8">
+                    我們在美感與實用機能之間取得完美平衡，打造適合都會小宅與小家庭的溫暖空間，讓每一件家具都像是本來就該在那裡一樣自然。
+                </p>
+                <div class="grid grid-cols-3 gap-6 pt-6 border-t border-[#C5A780]/20 text-center">
+                    <div class="transform hover:scale-105 transition-transform duration-300">
+                        <div class="text-2xl md:text-3xl font-light text-[#34372F] mb-1">100%</div>
+                        <div class="text-xs text-[#817565] tracking-wider">嚴選天然木材</div>
+                    </div>
+                    <div class="transform hover:scale-105 transition-transform duration-300">
+                        <div class="text-2xl md:text-3xl font-light text-[#34372F] mb-1">日系</div>
+                        <div class="text-xs text-[#817565] tracking-wider">溫潤減壓美學</div>
+                    </div>
+                    <div class="transform hover:scale-105 transition-transform duration-300">
+                        <div class="text-2xl md:text-3xl font-light text-[#34372F] mb-1">實用</div>
+                        <div class="text-xs text-[#817565] tracking-wider">兼顧小宅機能</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 家具系列區 (導入 Product x Typography Choreography 互動編排) -->
+    <section id="collections" class="py-28 bg-[#FAF6F0] px-6 border-y border-[#C5A780]/20">
+        <div class="max-w-7xl mx-auto">
+            <div class="scroll-reveal text-center max-w-2xl mx-auto mb-20">
+                <span class="text-xs uppercase tracking-[0.3em] text-[#817565] block mb-3 font-medium">Collections</span>
+                <h2 class="text-3xl md:text-4xl font-light text-[#34372F] tracking-wide mb-4">探索家具系列</h2>
+                <div class="w-12 h-[1px] bg-[#C5A780] mx-auto mb-4"></div>
+                <p class="text-[#817565] font-light tracking-wide">為每一個日常空間，尋找最溫柔的解答。</p>
+            </div>
+
+            <!-- 系列網格 (Choreography Cards) -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- 系列 1: 客廳家具 -->
+                <div class="scroll-reveal choreography-card bg-white rounded-lg overflow-hidden shadow-sm flex flex-col group">
+                    <div class="relative aspect-[4/3] overflow-hidden bg-gray-100">
+                        <img src="https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?auto=format&fit=crop&w=800&q=80" 
+                             alt="客廳家具系列" 
+                             class="card-img img-hover-zoom w-full h-full object-cover"
+                             onerror="this.src='https://placehold.co/600x450/E5DFD3/34372F?text=Living+Room';">
+                    </div>
+                    <div class="p-6 flex flex-col flex-grow justify-between">
+                        <div>
+                            <h3 class="card-title text-lg font-medium text-[#34372F] tracking-wider mb-2">客廳家具</h3>
+                            <p class="spec-line-1 text-sm text-[#817565] font-light tracking-wide mb-6">茶几、邊桌、電視櫃。以沉穩木韻交織出客廳的寧靜與流暢。</p>
+                        </div>
+                        <button onclick="openCollectionModal('客廳家具', '包含茶几、邊桌、電視櫃系列。嚴選溫潤北美白橡木，邊角皆經手工導圓細緻處理，兼具美感與家中有小孩的安全性。')" class="btn-interactive w-full py-3 bg-[#F2EADF] hover:bg-[#C5A780] hover:text-white text-[#34372F] text-xs tracking-[0.2em] rounded transition-colors text-center font-medium flex items-center justify-center gap-2">
+                            探索系列 <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 系列 2: 餐廳家具 -->
+                <div class="scroll-reveal choreography-card bg-white rounded-lg overflow-hidden shadow-sm flex flex-col group" style="transition-delay: 100ms;">
+                    <div class="relative aspect-[4/3] overflow-hidden bg-gray-100">
+                        <img src="https://images.unsplash.com/photo-1615066390971-03e4e1c36ddf?auto=format&fit=crop&w=800&q=80" 
+                             alt="餐廳家具系列" 
+                             class="card-img img-hover-zoom w-full h-full object-cover"
+                             onerror="this.src='https://placehold.co/600x450/E5DFD3/34372F?text=Dining+Room';">
+                    </div>
+                    <div class="p-6 flex flex-col flex-grow justify-between">
+                        <div>
+                            <h3 class="card-title text-lg font-medium text-[#34372F] tracking-wider mb-2">餐廳家具</h3>
+                            <p class="spec-line-1 text-sm text-[#817565] font-light tracking-wide mb-6">餐桌、餐椅、餐邊櫃。凝聚家人溫馨時光的美味聚落。</p>
+                        </div>
+                        <button onclick="openCollectionModal('餐廳家具', '包含實木餐桌、符合人體工學曲線的餐椅及收納大容量餐邊櫃。讓每一餐的聚會都沉浸在自然的芬多精與舒適氛圍中。')" class="btn-interactive w-full py-3 bg-[#F2EADF] hover:bg-[#C5A780] hover:text-white text-[#34372F] text-xs tracking-[0.2em] rounded transition-colors text-center font-medium flex items-center justify-center gap-2">
+                            探索系列 <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 系列 3: 收納家具 -->
+                <div class="scroll-reveal choreography-card bg-white rounded-lg overflow-hidden shadow-sm flex flex-col group" style="transition-delay: 200ms;">
+                    <div class="relative aspect-[4/3] overflow-hidden bg-gray-100">
+                        <img src="https://images.unsplash.com/photo-1595428774223-ef52624120d2?auto=format&fit=crop&w=800&q=80" 
+                             alt="收納家具系列" 
+                             class="card-img img-hover-zoom w-full h-full object-cover"
+                             onerror="this.src='https://placehold.co/600x450/E5DFD3/34372F?text=Storage';">
+                    </div>
+                    <div class="p-6 flex flex-col flex-grow justify-between">
+                        <div>
+                            <h3 class="card-title text-lg font-medium text-[#34372F] tracking-wider mb-2">收納家具</h3>
+                            <p class="spec-line-1 text-sm text-[#817565] font-light tracking-wide mb-6">層架、收納櫃、鞋櫃。把雜亂藏起來，將簡約與清爽留給生活。</p>
+                        </div>
+                        <button onclick="openCollectionModal('收納家具', '包含多功能層架、格柵式收納櫃與隱藏式鞋櫃。善用直向空間，兼具透氣性與美觀，完美消化小宅收納需求。')" class="btn-interactive w-full py-3 bg-[#F2EADF] hover:bg-[#C5A780] hover:text-white text-[#34372F] text-xs tracking-[0.2em] rounded transition-colors text-center font-medium flex items-center justify-center gap-2">
+                            探索系列 <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 系列 4: 工作家具 -->
+                <div class="scroll-reveal choreography-card bg-white rounded-lg overflow-hidden shadow-sm flex flex-col group" style="transition-delay: 300ms;">
+                    <div class="relative aspect-[4/3] overflow-hidden bg-gray-100">
+                        <img src="https://images.unsplash.com/photo-1518455027359-f3f8164ba6bd?auto=format&fit=crop&w=800&q=80" 
+                             alt="工作家具系列" 
+                             class="card-img img-hover-zoom w-full h-full object-cover"
+                             onerror="this.src='https://placehold.co/600x450/E5DFD3/34372F?text=Workspace';">
+                    </div>
+                    <div class="p-6 flex flex-col flex-grow justify-between">
+                        <div>
+                            <h3 class="card-title text-lg font-medium text-[#34372F] tracking-wider mb-2">工作家具</h3>
+                            <p class="spec-line-1 text-sm text-[#817565] font-light tracking-wide mb-6">書桌、書架、多功能邊桌。專注靈感的沉靜角落。</p>
+                        </div>
+                        <button onclick="openCollectionModal('工作家具', '包含簡約實木書桌、錯落式書架與多功能移動邊桌。隱藏式走線設計，讓居家辦公也能擁有極致乾淨的日系美學。')" class="btn-interactive w-full py-3 bg-[#F2EADF] hover:bg-[#C5A780] hover:text-white text-[#34372F] text-xs tracking-[0.2em] rounded transition-colors text-center font-medium flex items-center justify-center gap-2">
+                            探索系列 <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 主打產品區 (導入 Product x Typography Choreography 產品卡片與文字交織編排) -->
+    <section id="featured" class="py-28 md:py-36 px-6 max-w-7xl mx-auto">
+        <div class="scroll-reveal text-center max-w-2xl mx-auto mb-20">
+            <span class="text-xs uppercase tracking-[0.3em] text-[#817565] block mb-3 font-medium">Featured Products</span>
+            <h2 class="text-3xl md:text-4xl font-light text-[#34372F] tracking-wide mb-4">主打代表作</h2>
+            <div class="w-12 h-[1px] bg-[#C5A780] mx-auto mb-4"></div>
+            <p class="text-[#817565] font-light tracking-wide">以精湛工藝打造的三款經典日系家具（註：以下資訊為示範價格與規格）</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+            <!-- 產品 1 -->
+            <div class="scroll-reveal choreography-card bg-[#FAF6F0] rounded-lg overflow-hidden border border-[#C5A780]/20 flex flex-col group">
+                <div class="relative aspect-[4/3] overflow-hidden bg-white">
+                    <img src="https://images.unsplash.com/photo-1533090161767-e6ffed986c88?auto=format&fit=crop&w=800&q=80" 
+                         alt="森呼吸實木茶几" 
+                         class="card-img img-hover-zoom w-full h-full object-cover"
+                         onerror="this.src='https://placehold.co/600x450/E5DFD3/34372F?text=Coffee+Table';">
+                    <span class="absolute top-4 left-4 bg-[#34372F] text-white text-[10px] tracking-widest px-3 py-1 rounded shadow">熱銷推薦</span>
+                </div>
+                <div class="p-8 flex flex-col flex-grow justify-between">
+                    <div>
+                        <h3 class="card-title text-xl font-medium text-[#34372F] tracking-wide mb-3">森呼吸實木茶几</h3>
+                        <div class="space-y-1.5 text-xs text-[#817565] mb-6 font-light">
+                            <p class="spec-line-1"><span class="font-medium text-[#34372F]">材質：</span>北美白橡木 / 環保植物塗裝</p>
+                            <p class="spec-line-2"><span class="font-medium text-[#34372F]">尺寸：</span>W110 x D55 x H42 cm</p>
+                            <p class="spec-line-3 text-sm font-medium text-[#C5A780] pt-1">示範價格：NT$ 12,800</p>
+                        </div>
+                    </div>
+                    <button onclick="openProductModal('森呼吸實木茶几', 'NT$ 12,800', '北美白橡木 / 環保植物塗裝', 'W110 x D55 x H42 cm', '線條圓潤流暢，雙層置物空間可收納雜誌與遙控器，完美融入日系小宅客廳。')" class="btn-interactive w-full py-3.5 bg-[#C5A780] hover:bg-[#b0936e] text-white text-xs tracking-[0.2em] rounded transition-colors text-center font-medium shadow-sm flex items-center justify-center gap-2">
+                        查看產品詳情 <i class="fa-solid fa-arrow-right text-xs"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 產品 2 -->
+            <div class="scroll-reveal choreography-card bg-[#FAF6F0] rounded-lg overflow-hidden border border-[#C5A780]/20 flex flex-col group" style="transition-delay: 150ms;">
+                <div class="relative aspect-[4/3] overflow-hidden bg-white">
+                    <img src="https://images.unsplash.com/photo-1615066390971-03e4e1c36ddf?auto=format&fit=crop&w=800&q=80" 
+                         alt="輕喃日安實木餐桌" 
+                         class="card-img img-hover-zoom w-full h-full object-cover"
+                         onerror="this.src='https://placehold.co/600x450/E5DFD3/34372F?text=Dining+Table';">
+                    <span class="absolute top-4 left-4 bg-[#C5A780] text-white text-[10px] tracking-widest px-3 py-1 rounded shadow">經典設計</span>
+                </div>
+                <div class="p-8 flex flex-col flex-grow justify-between">
+                    <div>
+                        <h3 class="card-title text-xl font-medium text-[#34372F] tracking-wide mb-3">輕喃日安實木餐桌</h3>
+                        <div class="space-y-1.5 text-xs text-[#817565] mb-6 font-light">
+                            <p class="spec-line-1"><span class="font-medium text-[#34372F]">材質：</span>北美胡桃木 / 天然木蜡油</p>
+                            <p class="spec-line-2"><span class="font-medium text-[#34372F]">尺寸：</span>W140 x D80 x H75 cm</p>
+                            <p class="spec-line-3 text-sm font-medium text-[#C5A780] pt-1">示範價格：NT$ 18,500</p>
+                        </div>
+                    </div>
+                    <button onclick="openProductModal('輕喃日安實木餐桌', 'NT$ 18,500', '北美胡桃木 / 天然木蜡油', 'W140 x D80 x H75 cm', '桌面邊緣採用精緻的 45 度斜邊收邊，視覺輕盈不笨重，賦予餐廚空間溫暖優雅的氣息。')" class="btn-interactive w-full py-3.5 bg-[#C5A780] hover:bg-[#b0936e] text-white text-xs tracking-[0.2em] rounded transition-colors text-center font-medium shadow-sm flex items-center justify-center gap-2">
+                        查看產品詳情 <i class="fa-solid fa-arrow-right text-xs"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 產品 3 -->
+            <div class="scroll-reveal choreography-card bg-[#FAF6F0] rounded-lg overflow-hidden border border-[#C5A780]/20 flex flex-col group" style="transition-delay: 300ms;">
+                <div class="relative aspect-[4/3] overflow-hidden bg-white">
+                    <img src="https://images.unsplash.com/photo-1595428774223-ef52624120d2?auto=format&fit=crop&w=800&q=80" 
+                         alt="靜謐格柵收納櫃" 
+                         class="card-img img-hover-zoom w-full h-full object-cover"
+                         onerror="this.src='https://placehold.co/600x450/E5DFD3/34372F?text=Storage+Cabinet';">
+                    <span class="absolute top-4 left-4 bg-[#817565] text-white text-[10px] tracking-widest px-3 py-1 rounded shadow">人氣收納</span>
+                </div>
+                <div class="p-8 flex flex-col flex-grow justify-between">
+                    <div>
+                        <h3 class="card-title text-xl font-medium text-[#34372F] tracking-wide mb-3">靜謐格柵收納櫃</h3>
+                        <div class="space-y-1.5 text-xs text-[#817565] mb-6 font-light">
+                            <p class="spec-line-1"><span class="font-medium text-[#34372F]">材質：</span>白橡木複合實木 / 藤編元素</p>
+                            <p class="spec-line-2"><span class="font-medium text-[#34372F]">尺寸：</span>W90 x D40 x H120 cm</p>
+                            <p class="spec-line-3 text-sm font-medium text-[#C5A780] pt-1">示範價格：NT$ 15,200</p>
+                        </div>
+                    </div>
+                    <button onclick="openProductModal('靜謐格柵收納櫃', 'NT$ 15,200', '白橡木複合實木 / 藤編元素', 'W90 x D40 x H120 cm', '獨特的通風藤編櫃門，兼具防塵與透氣功能。內部層板可依需求自由調整高度，兼具美學與收納機能。')" class="btn-interactive w-full py-3.5 bg-[#C5A780] hover:bg-[#b0936e] text-white text-xs tracking-[0.2em] rounded transition-colors text-center font-medium shadow-sm flex items-center justify-center gap-2">
+                        查看產品詳情 <i class="fa-solid fa-arrow-right text-xs"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 居家靈感區 -->
+    <section id="inspiration" class="py-28 bg-[#FAF6F0] px-6 border-t border-[#C5A780]/20">
+        <div class="max-w-7xl mx-auto">
+            <div class="scroll-reveal text-center max-w-2xl mx-auto mb-20">
+                <span class="text-xs uppercase tracking-[0.3em] text-[#817565] block mb-3 font-medium">Inspiration</span>
+                <h2 class="text-3xl md:text-4xl font-light text-[#34372F] tracking-wide mb-4">居家靈感與日常提案</h2>
+                <div class="w-12 h-[1px] bg-[#C5A780] mx-auto mb-4"></div>
+                <p class="text-[#817565] font-light tracking-wide">在真實的生活場景中，感受木質所帶來的寧靜力量。</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- 靈感 1 -->
+                <div class="scroll-reveal relative overflow-hidden rounded-lg group aspect-[4/5] shadow-md">
+                    <img src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=800&q=80" 
+                         alt="日系溫润客廳空間" 
+                         class="img-hover-zoom w-full h-full object-cover"
+                         onerror="this.src='https://placehold.co/600x750/E5DFD3/34372F?text=Living+Inspiration';">
+                    <div class="absolute inset-0 bg-gradient-to-t from-[#34372F]/85 via-[#34372F]/20 to-transparent flex flex-col justify-end p-8 text-white transition-opacity duration-300">
+                        <span class="text-xs tracking-[0.2em] text-[#C5A780] font-medium mb-2">LIVING ROOM</span>
+                        <h3 class="text-xl font-light tracking-wide mb-3">光影與木質的微調平衡</h3>
+                        <p class="text-xs text-gray-200 font-light leading-relaxed mb-4">透過大片採光與原木茶几的低彩度搭配，讓小宅客廳也能展現通透寬敞的呼吸感。</p>
+                        <button onclick="openInspirationModal('光影與木質的微調平衡', '在日系居家設計中，光線是最好的裝飾。我們建議搭配亞麻色系的窗簾與地毯，讓陽光灑落在白橡木紋上，營造出無壓的靜心角落。')" class="self-start text-xs tracking-widest text-[#C5A780] hover:text-white transition-colors flex items-center gap-2 group-hover:translate-x-1 duration-300">
+                            閱讀搭配提案 <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 靈感 2 -->
+                <div class="scroll-reveal relative overflow-hidden rounded-lg group aspect-[4/5] shadow-md" style="transition-delay: 150ms;">
+                    <img src="https://images.unsplash.com/photo-1615066390971-03e4e1c36ddf?auto=format&fit=crop&w=800&q=80" 
+                         alt="溫馨餐廳角落" 
+                         class="img-hover-zoom w-full h-full object-cover"
+                         onerror="this.src='https://placehold.co/600x750/E5DFD3/34372F?text=Dining+Inspiration';">
+                    <div class="absolute inset-0 bg-gradient-to-t from-[#34372F]/85 via-[#34372F]/20 to-transparent flex flex-col justify-end p-8 text-white transition-opacity duration-300">
+                        <span class="text-xs tracking-[0.2em] text-[#C5A780] font-medium mb-2">DINING SPACE</span>
+                        <h3 class="text-xl font-light tracking-wide mb-3">聚落美好的晚餐時光</h3>
+                        <p class="text-xs text-gray-200 font-light leading-relaxed mb-4">一張溫潤的實木餐桌，承載的不只是日常三餐，更是家人之間最真誠溫馨的交流。</p>
+                        <button onclick="openInspirationModal('聚落美好的晚餐時光', '選擇適度大小的胡桃木餐桌，搭配張力適中的吊燈，在柔和的黃光下，用餐氣氛瞬間變得無比溫馨而放鬆。')" class="self-start text-xs tracking-widest text-[#C5A780] hover:text-white transition-colors flex items-center gap-2 group-hover:translate-x-1 duration-300">
+                            閱讀搭配提案 <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 靈感 3 -->
+                <div class="scroll-reveal relative overflow-hidden rounded-lg group aspect-[4/5] shadow-md" style="transition-delay: 300ms;">
+                    <img src="https://images.unsplash.com/photo-1518455027359-f3f8164ba6bd?auto=format&fit=crop&w=800&q=80" 
+                         alt="寧靜工作角落" 
+                         class="img-hover-zoom w-full h-full object-cover"
+                         onerror="this.src='https://placehold.co/600x750/E5DFD3/34372F?text=Workspace+Inspiration';">
+                    <div class="absolute inset-0 bg-gradient-to-t from-[#34372F]/85 via-[#34372F]/20 to-transparent flex flex-col justify-end p-8 text-white transition-opacity duration-300">
+                        <span class="text-xs tracking-[0.2em] text-[#C5A780] font-medium mb-2">HOME OFFICE</span>
+                        <h3 class="text-xl font-light tracking-wide mb-3">專注而沉靜的靈感角落</h3>
+                        <p class="text-xs text-gray-200 font-light leading-relaxed mb-4">在極簡的書桌前，遠離喧囂，讓思緒隨著木質的天然香氣一同沈澱。</p>
+                        <button onclick="openInspirationModal('專注而沉靜的靈感角落', '保持桌面無過多雜物，僅擺放一盞陶瓷檯燈與筆電，善用木質層架收納書籍，打造能提升專注力的居家辦公環境。')" class="self-start text-xs tracking-widest text-[#C5A780] hover:text-white transition-colors flex items-center gap-2 group-hover:translate-x-1 duration-300">
+                            閱讀搭配提案 <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="scroll-reveal text-center mt-16">
+                <button onclick="openMoreInspirationModal()" class="btn-interactive px-10 py-4 bg-[#34372F] hover:bg-[#4a4f44] text-white text-xs tracking-[0.2em] rounded shadow-md flex items-center justify-center gap-2 mx-auto">
+                    探索更多居家靈感 <i class="fa-solid fa-arrow-right text-xs"></i>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- 品牌主張區 -->
+    <section class="scroll-reveal relative py-32 px-6 overflow-hidden bg-[#34372F] text-white text-center">
+        <div class="parallax-bg absolute inset-0 opacity-15 bg-[radial-gradient(#C5A780_1px,transparent_1px)] [background-size:16px_16px] -top-[10%] h-[120%]" id="manifesto-bg"></div>
+        <div class="relative z-10 max-w-4xl mx-auto">
+            <span class="text-xs uppercase tracking-[0.3em] text-[#C5A780] block mb-4 font-medium">Brand Manifesto</span>
+            <blockquote class="text-2xl md:text-4xl font-light tracking-wider leading-relaxed mb-8">
+                「好的設計，不是增加生活的負擔，而是讓日常更加自在。」
+            </blockquote>
+            <div class="w-12 h-[1px] bg-[#C5A780] mx-auto mb-6"></div>
+            <p class="text-sm md:text-base text-gray-300 font-light tracking-widest">
+                MORII 木里 — 陪伴你找回生活的原點。
+            </p>
+        </div>
+    </section>
+
+    <!-- Footer 頁尾 -->
+    <footer id="contact" class="bg-[#2a2d26] text-gray-300 py-20 px-6 border-t border-[#C5A780]/20">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
+            <!-- 品牌與標語 -->
+            <div class="space-y-4">
+                <div class="flex flex-col items-start">
+                    <span class="text-2xl font-light tracking-[0.25em] text-white">MORII</span>
+                    <span class="text-[10px] tracking-[0.3em] text-[#C5A780] -mt-1 font-medium">木 里</span>
+                </div>
+                <p class="text-xs text-gray-400 font-light tracking-wide leading-relaxed">
+                    讓生活，回到舒服的樣子。<br>日系自然木質家具品牌。
+                </p>
+                <div class="flex space-x-4 pt-2">
+                    <a href="#" class="w-9 h-9 rounded-full bg-[#34372F] flex items-center justify-center text-white hover:bg-[#C5A780] transition-colors" aria-label="Instagram">
+                        <i class="fa-brands fa-instagram text-sm"></i>
+                    </a>
+                    <a href="#" class="w-9 h-9 rounded-full bg-[#34372F] flex items-center justify-center text-white hover:bg-[#C5A780] transition-colors" aria-label="Facebook">
+                        <i class="fa-brands fa-facebook-f text-sm"></i>
+                    </a>
+                    <a href="#" class="w-9 h-9 rounded-full bg-[#34372F] flex items-center justify-center text-white hover:bg-[#C5A780] transition-colors" aria-label="Line">
+                        <i class="fa-brands fa-line text-sm"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- 網站導覽 -->
+            <div>
+                <h4 class="text-sm font-medium text-white tracking-widest mb-6 uppercase">網站導覽</h4>
+                <ul class="space-y-3 text-xs font-light tracking-wide">
+                    <li><a href="#philosophy" class="hover:text-[#C5A780] transition-colors">品牌理念</a></li>
+                    <li><a href="#collections" class="hover:text-[#C5A780] transition-colors">家具系列</a></li>
+                    <li><a href="#featured" class="hover:text-[#C5A780] transition-colors">主打產品</a></li>
+                    <li><a href="#inspiration" class="hover:text-[#C5A780] transition-colors">居家靈感</a></li>
+                </ul>
+            </div>
+
+            <!-- 聯絡資訊示範 -->
+            <div>
+                <h4 class="text-sm font-medium text-white tracking-widest mb-6 uppercase">聯絡資訊 (示範)</h4>
+                <ul class="space-y-3 text-xs font-light tracking-wide text-gray-400">
+                    <li class="flex items-start gap-2">
+                        <i class="fa-solid fa-location-dot mt-0.5 text-[#C5A780]"></i>
+                        <span>台北市大安區木里街 88 號 1 樓 (概念展示間)</span>
+                    </li>
+                    <li class="flex items-center gap-2">
+                        <i class="fa-solid fa-phone text-[#C5A780]"></i>
+                        <span>(02) 2345-6789</span>
+                    </li>
+                    <li class="flex items-center gap-2">
+                        <i class="fa-solid fa-envelope text-[#C5A780]"></i>
+                        <span>hello@morii-muli.com.tw</span>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- 營業時間與諮詢 -->
+            <div>
+                <h4 class="text-sm font-medium text-white tracking-widest mb-6 uppercase">展示間營業時間</h4>
+                <p class="text-xs text-gray-400 font-light leading-relaxed mb-4">
+                    週二至週日 11:00 - 20:00<br>週一公休 (採預約參觀制)
+                </p>
+                <button onclick="openContactModal()" class="btn-interactive px-5 py-2.5 bg-[#C5A780] hover:bg-[#b0936e] text-white text-xs tracking-widest rounded transition-colors">
+                    預約實體參觀
+                </button>
+            </div>
+        </div>
+
+        <div class="max-w-7xl mx-auto pt-8 border-t border-gray-800 text-center text-[11px] text-gray-500 font-light tracking-widest">
+            &copy; 2026 MORII 木里 All Rights Reserved. (本網站為品牌形象與產品展示示範專案)
+        </div>
+    </footer>
+
+    <!-- 通用彈跳視窗 (Message Box / Modal) -->
+    <div id="custom-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm hidden opacity-0 transition-opacity duration-300">
+        <div id="modal-content" class="bg-[#FAF6F0] w-11/12 max-w-lg rounded-xl p-8 shadow-2xl transform scale-95 transition-all duration-300 border border-[#C5A780]/30 relative">
+            <button onclick="closeModal()" class="absolute top-5 right-5 text-[#34372F] hover:text-[#C5A780] text-lg focus:outline-none transition-transform hover:scale-110">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div id="modal-body">
+                <!-- 動態填入內容 -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 手機選單切換
+        const menuBtn = document.getElementById('menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        menuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // 點擊選單連結後自動收合手機選單
+        const mobileLinks = mobileMenu.querySelectorAll('a');
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+            });
+        });
+
+        // 滾動偵測淡入顯現 (Scroll Intersection Observer)
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const revealElements = document.querySelectorAll('.scroll-reveal');
+            revealElements.forEach(el => observer.observe(el));
+        });
+
+        // 視差滾動效果 (Smooth Parallax Scrolling Effect)
+        const heroBg = document.getElementById('hero-bg');
+        const manifestoBg = document.getElementById('manifesto-bg');
+
+        window.addEventListener('scroll', () => {
+            const windowWidth = window.innerWidth;
+            // 在裝置支援動畫且非極小螢幕時計算視差
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                const scrolled = window.pageYOffset;
+
+                // Hero 背景視差位移
+                if (heroBg && scrolled < window.innerHeight * 1.2) {
+                    heroBg.style.transform = `translate3d(0, ${scrolled * 0.35}px, 0) scale(1.05)`;
+                }
+
+                // 品牌主張區背景視差位移
+                if (manifestoBg) {
+                    const manifestoSection = manifestoBg.parentElement;
+                    const rect = manifestoSection.getBoundingClientRect();
+                    if (rect.top < window.innerHeight && rect.bottom > 0) {
+                        const speed = 0.2;
+                        const yPos = (window.innerHeight - rect.top) * speed;
+                        manifestoBg.style.transform = `translate3d(0, ${yPos}px, 0)`;
+                    }
+                }
+            }
+        });
+
+        // 彈跳視窗控制邏輯 (絕對不使用 alert() 與 confirm())
+        const modal = document.getElementById('custom-modal');
+        const modalBody = document.getElementById('modal-body');
+
+        function showModal(htmlContent) {
+            modalBody.innerHTML = htmlContent;
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                modal.querySelector('#modal-content').classList.remove('scale-95');
+                modal.querySelector('#modal-content').classList.add('scale-100');
+            }, 10);
+        }
+
+        function closeModal() {
+            modal.classList.add('opacity-0');
+            modal.querySelector('#modal-content').classList.remove('scale-100');
+            modal.querySelector('#modal-content').classList.add('scale-95');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
+        }
+
+        // 點擊背景關閉 Modal
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+
+        // 系列探索 Modal
+        function openCollectionModal(title, desc) {
+            showModal(`
+                <span class="text-xs uppercase tracking-[0.2em] text-[#817565] block mb-2 font-medium">MORII COLLECTIONS</span>
+                <h3 class="text-2xl font-light text-[#34372F] tracking-wide mb-4">${title}</h3>
+                <div class="w-10 h-[1px] bg-[#C5A780] mb-4"></div>
+                <p class="text-sm text-[#817565] leading-relaxed font-light mb-6">${desc}</p>
+                <div class="bg-[#F2EADF] p-4 rounded-lg mb-6 text-xs text-[#34372F] font-light">
+                    💡 提示：歡迎至台北大安概念展示間實際體驗全系列木質家具觸感與溫潤質感。
+                </div>
+                <button onclick="closeModal()" class="btn-interactive w-full py-3 bg-[#C5A780] text-white text-xs tracking-[0.2em] rounded hover:bg-[#b0936e] transition-colors">
+                    了解更多
+                </button>
+            `);
+        }
+
+        // 產品詳情 Modal
+        function openProductModal(name, price, material, size, desc) {
+            showModal(`
+                <span class="text-xs uppercase tracking-[0.2em] text-[#817565] block mb-2 font-medium">FEATURED PRODUCT</span>
+                <h3 class="text-2xl font-light text-[#34372F] tracking-wide mb-2">${name}</h3>
+                <div class="text-lg font-medium text-[#C5A780] mb-4">${price}</div>
+                <div class="w-10 h-[1px] bg-[#C5A780] mb-4"></div>
+                <div class="space-y-2 text-xs text-[#817565] font-light mb-6">
+                    <p><span class="font-medium text-[#34372F]">材質規格：</span>${material}</p>
+                    <p><span class="font-medium text-[#34372F]">商品尺寸：</span>${size}</p>
+                    <p><span class="font-medium text-[#34372F]">設計特色：</span>${desc}</p>
+                </div>
+                <div class="bg-[#F2EADF] p-3 rounded-lg mb-6 text-[11px] text-[#34372F] font-light">
+                    ⚠️ 註：以上價格與規格為示範展示資訊，非實際電商販售系統。
+                </div>
+                <button onclick="closeModal()" class="btn-interactive w-full py-3 bg-[#34372F] text-white text-xs tracking-[0.2em] rounded hover:bg-[#4a4f44] transition-colors">
+                    關閉視窗
+                </button>
+            `);
+        }
+
+        // 居家靈感 Modal
+        function openInspirationModal(title, desc) {
+            showModal(`
+                <span class="text-xs uppercase tracking-[0.2em] text-[#817565] block mb-2 font-medium">HOME INSPIRATION</span>
+                <h3 class="text-2xl font-light text-[#34372F] tracking-wide mb-4">${title}</h3>
+                <div class="w-10 h-[1px] bg-[#C5A780] mb-4"></div>
+                <p class="text-sm text-[#817565] leading-relaxed font-light mb-6">${desc}</p>
+                <button onclick="closeModal()" class="btn-interactive w-full py-3 bg-[#C5A780] text-white text-xs tracking-[0.2em] rounded hover:bg-[#b0936e] transition-colors">
+                    關閉靈感提案
+                </button>
+            `);
+        }
+
+        // 更多靈感 Modal
+        function openMoreInspirationModal() {
+            showModal(`
+                <span class="text-xs uppercase tracking-[0.2em] text-[#817565] block mb-2 font-medium">MORII JOURNAL</span>
+                <h3 class="text-2xl font-light text-[#34372F] tracking-wide mb-4">更多居家靈感提案</h3>
+                <div class="w-10 h-[1px] bg-[#C5A780] mb-4"></div>
+                <p class="text-sm text-[#817565] leading-relaxed font-light mb-6">
+                    MORII 木里每季會定期推出「小宅空間放大術」、「原木家具保養指南」與「日系溫潤美學專欄」。歡迎追蹤我們的 Instagram 帳號獲得最新居家靈感！
+                </p>
+                <button onclick="closeModal()" class="btn-interactive w-full py-3 bg-[#34372F] text-white text-xs tracking-[0.2em] rounded hover:bg-[#4a4f44] transition-colors">
+                    我知道了
+                </button>
+            `);
+        }
+
+        // 預約參觀 Modal
+        function openContactModal() {
+            showModal(`
+                <span class="text-xs uppercase tracking-[0.2em] text-[#817565] block mb-2 font-medium">RESERVATION</span>
+                <h3 class="text-2xl font-light text-[#34372F] tracking-wide mb-4">預約實體展示間參觀</h3>
+                <div class="w-10 h-[1px] bg-[#C5A780] mb-4"></div>
+                <p class="text-xs text-[#817565] leading-relaxed font-light mb-6">
+                    為了維護參觀品質，展示間採預約制。請留下您的聯絡方式，我們將有專人與您聯繫確認參觀時段。
+                </p>
+                <div class="space-y-4 mb-6">
+                    <input type="text" placeholder="您的姓名" class="w-full px-4 py-2.5 text-xs bg-white border border-[#C5A780]/30 rounded focus:outline-none focus:border-[#C5A780]">
+                    <input type="tel" placeholder="聯絡電話" class="w-full px-4 py-2.5 text-xs bg-white border border-[#C5A780]/30 rounded focus:outline-none focus:border-[#C5A780]">
+                </div>
+                <button onclick="handleReservationSubmit()" class="btn-interactive w-full py-3 bg-[#C5A780] text-white text-xs tracking-[0.2em] rounded hover:bg-[#b0936e] transition-colors">
+                    確認送出預約
+                </button>
+            `);
+        }
+
+        function handleReservationSubmit() {
+            closeModal();
+            setTimeout(() => {
+                showModal(`
+                    <div class="text-center py-6">
+                        <i class="fa-solid fa-circle-check text-4xl text-[#C5A780] mb-4"></i>
+                        <h3 class="text-xl font-light text-[#34372F] tracking-wide mb-2">預約申請已收到</h3>
+                        <p class="text-xs text-[#817565] font-light mb-6">感謝您的填寫，我們將於 24 小時內與您聯繫確認參觀時間。</p>
+                        <button onclick="closeModal()" class="btn-interactive px-8 py-2.5 bg-[#34372F] text-white text-xs tracking-[0.2em] rounded">
+                            關閉視窗
+                        </button>
+                    </div>
+                `);
+            }, 300);
+        }
+    </script>
+</body>
+</html>
